@@ -1,101 +1,44 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>位置情報取得サンプル</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS 標高表示</title>
 
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 30px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    #result {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f4f4f4;
-      border-radius: 8px;
-    }
-  </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>現在地を取得</h1>
+    <div class="container">
 
-  <button id="getLocationBtn">位置情報を取得</button>
+        <h1>現在地・標高表示</h1>
 
-  <div id="result">
-    まだ取得していません
-  </div>
+        <button id="getLocationBtn">
+            現在地取得
+        </button>
 
-  <script>
-    const button = document.getElementById("getLocationBtn");
-    const result = document.getElementById("result");
+        <div class="info">
 
-    button.addEventListener("click", () => {
-      result.innerHTML="こんにちは";
+            <p>
+                <strong>緯度:</strong>
+                <span id="lat">-</span>
+            </p>
 
-      // Geolocation API が使えるか確認
-      if (!navigator.geolocation) {
-        result.innerHTML = "このブラウザでは位置情報取得に対応していません。";
-        return;
-      }
+            <p>
+                <strong>経度:</strong>
+                <span id="lon">-</span>
+            </p>
 
-      result.innerHTML = "取得中...";
+            <p>
+                <strong>標高:</strong>
+                <span id="elevation">-</span> m
+            </p>
 
-      navigator.geolocation.getCurrentPosition(
-        // 成功時
-        (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const altitude = position.coords.altitude;
-          const accuracy = position.coords.accuracy;
+        </div>
 
-          result.innerHTML = `
-            <h3>取得成功</h3>
-            <p><strong>緯度:</strong> ${latitude}</p>
-            <p><strong>経度:</strong> ${longitude}</p>
-            <p><strong>高度:</strong> ${altitude}</p>
-            <p><strong>精度:</strong> ${accuracy} メートル</p>
-          `;
-        },
+    </div>
 
-        // エラー時
-        (error) => {
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              result.innerHTML = "位置情報の利用が拒否されました。";
-              break;
-
-            case error.POSITION_UNAVAILABLE:
-              result.innerHTML = "位置情報を取得できませんでした。";
-              break;
-
-            case error.TIMEOUT:
-              result.innerHTML = "タイムアウトしました。";
-              break;
-
-            default:
-              result.innerHTML = "不明なエラーが発生しました。";
-          }
-        },
-
-        // オプション
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0
-        }
-      );
-    });
-  </script>
+    <script src="script.js"></script>
 
 </body>
 </html>
