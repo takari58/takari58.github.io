@@ -1,60 +1,62 @@
-const button = document.getElementById("getLocationBtn");
+const map = L.map('map').setView([37.9549, 139.34], 15); //初期位置
 
-const latText = document.getElementById("lat");
-const lonText = document.getElementById("lon");
-const elevationText = document.getElementById("elevation");
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
-button.addEventListener("click", () => {
+L.marker([37.9549, 139.34])
+  .addTo(map)
+  .bindPopup('新潟職能短大');
 
-    if (!navigator.geolocation) {
+  // マーカー一覧
+const spots = [
+    [37.93682,139.34488, "藤倉メンチカツや"],
+    [37.93853,139.35499 , "五十公野公園","images/park.png"],
+    [37.95386,139.35475 , "新発田温泉あやめの湯"],
+    [37.94039,139.33600 , "ボン・タケダ"],
+    [37.94413,139.33510, "新発田駅","images/station.png"],
 
-        alert("GPSが利用できません");
-        return;
-    }
+    //目的地追加
+    [37.94436989072327, 139.33066511399528, "王紋酒造"],
+    [37.9439484335483, 139.3290399532482, "新柳本店"],
+    [37.94362956283686, 139.32893881497583, "足軽長屋"],
+    [37.943488370885426, 139.3283501557452, "清水園"],
+    [37.94560674254775, 139.3293070494989, "寺町びより"],
+    [37.946774810214805, 139.33233339158136, "Emmagateauchocolat"],
+    [37.9473577091012, 139.32720395653155, "シンガポール食堂"],
+    [37.9468250648009, 139.32739436670366, "とれんでぃ"],
+    [37.94938880733961, 139.32482050137597, "天ぷら 海老清"],
+    [37.95082280311497, 139.32538651441882, "菓匠庵 寿堂"],
+    [37.95177905279588, 139.32702565941747, "新発田市民文化会館"],
+    [37.954824724542696, 139.326001834219947, "新発田城跡","images/castle.png"],
 
-    navigator.geolocation.getCurrentPosition(
+  ];
+  
+  // ループで配置
+  spots.forEach(spot => {
+  
+    const lat = spot[0];  //緯度
+    const lng = spot[1];  //経度
+    const name = spot[2]; //名称
+    const image = spot[3]; //イメージ画像
+  
+    L.marker([lat, lng])  //マーカー作成
+      .addTo(map)
+      .bindPopup(` 
+      <div style="text-align:center;">
+      <h3>${name}</h3>
 
-        async (position) => {
+      <img
+        src="${image}"
+        width="200"
+        style="border-radius:8px;"
+      >
 
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+      <br><br>
 
-            latText.textContent = lat;
-            lonText.textContent = lon;
-
-            // 国土地理院 標高API
-            const url =
-                `https://cyberjapandata2.gsi.go.jp/general/dem/scripts/getelevation.php?lon=${lon}&lat=${lat}&outtype=JSON`;
-
-            try {
-
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (data.elevation !== undefined) {
-
-                    elevationText.textContent = data.elevation;
-
-                } else {
-
-                    elevationText.textContent = "取得失敗";
-
-                }
-
-            } catch (error) {
-
-                elevationText.textContent = "エラー";
-
-            }
-
-        },
-
-        (error) => {
-
-            alert("位置情報取得に失敗しました");
-
-        }
-
-    );
-
-});
+      緯度: ${lat}<br>
+      経度: ${lng}
+      </div>
+      `);  
+  
+  });
